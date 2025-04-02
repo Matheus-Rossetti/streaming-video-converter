@@ -27,11 +27,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 
 	startUp := time.Now()
 
-	file, header, err := r.FormFile("file")
-
-	if err != nil {
-		http.Error(w, "Erro ao obter o arquivo", http.StatusBadRequest)
-	}
+	file, header, _ := r.FormFile("file")
 
 	defer file.Close()
 
