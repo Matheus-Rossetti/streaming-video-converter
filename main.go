@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"os"
@@ -40,26 +39,6 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 
 	endUp := time.Since(startUp)
 	fmt.Printf("tempo de upload: %s", endUp)
-
-	// salva o arquivo
-
-	startProcess := time.Now()
-
-	dst, err := os.Create("/tmp/" + header.Filename)
-	if err != nil {
-		http.Error(w, "Erro ao criar o arquivo", http.StatusInternalServerError)
-		return
-	}
-	defer dst.Close()
-
-	_, err = io.Copy(dst, file)
-	if err != nil {
-		http.Error(w, "Erro ao salvar o arquivo", http.StatusInternalServerError)
-		return
-	}
-
-	endProcess := time.Since(startProcess)
-	fmt.Printf("tempo de processamento: %s", endProcess)
 }
 
 func main() {
