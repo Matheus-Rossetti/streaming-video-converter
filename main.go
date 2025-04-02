@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"mime/multipart"
 	"net/http"
 	"os"
 	"os/exec"
@@ -23,18 +24,27 @@ func handler(w http.ResponseWriter, r *http.Request) {
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, "This route is 'POST' only", http.StatusMethodNotAllowed)
+		return
 	}
 
 	startUp := time.Now()
 
-	file, header, _ := r.FormFile("file")
-
-	defer file.Close()
+	file, header, err := r.FormFile("file")
+	if err != nil {
+		http.Error(w, "Erro ao obter o arquivo: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+	defer func(file multipart.File) {
+		err := file.Close()
+		if err != nil {
+			return
+		}
+	}(file)
 
 	fmt.Printf("Uploaded File: %+v\n", header.Filename)
 
 	endUp := time.Since(startUp)
-	fmt.Printf("tempo de upload: %s", endUp)
+	fmt.Printf("tempo de upload: %s\n", endUp)
 }
 
 func main() {
