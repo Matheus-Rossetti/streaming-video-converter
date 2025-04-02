@@ -45,7 +45,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 
 	startProcess := time.Now()
 
-	dst, err := os.Create("./uploads/" + header.Filename)
+	dst, err := os.Create("/tmp/" + header.Filename)
 	if err != nil {
 		http.Error(w, "Erro ao criar o arquivo", http.StatusInternalServerError)
 		return
