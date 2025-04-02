@@ -34,17 +34,21 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Erro ao obter o arquivo: "+err.Error(), http.StatusBadRequest)
 		return
 	}
+	endUp := time.Since(startUp)
+	fmt.Printf("tempo de upload: %s\n", endUp)
+
+	startClose := time.Now()
 	defer func(file multipart.File) {
 		err := file.Close()
 		if err != nil {
 			return
 		}
 	}(file)
+	endClose := time.Since(startClose)
+	fmt.Printf("tempo de upload: %s\n", endClose)
 
 	fmt.Printf("Uploaded File: %+v\n", header.Filename)
 
-	endUp := time.Since(startUp)
-	fmt.Printf("tempo de upload: %s\n", endUp)
 }
 
 func main() {
